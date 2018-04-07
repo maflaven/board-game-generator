@@ -5,9 +5,8 @@ let texts = [];
 const generateBoard = (options) => {
 
   if (typeof two !== "undefined") {
-    two.remove(squares.concat(texts));
+    two.clear();
     squares = []; texts = [];
-    two.update();
   } else {
     const params = { width: 3000, height: 3000 };
     const elem = document.getElementById('board');
