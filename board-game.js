@@ -51,12 +51,24 @@ const generateBoard = (options) => {
     square.linewidth = sectionLineWidth;
     squares.push(square);
 
-    const text = two.makeText(`#${i + 1}`, x, y);
+    const text = two.makeText(`Space\n#${i + 1}`, x, y);
     text.rotation = rotation;
     texts.push(text);
   }
 
   two.update();
+
+  texts.forEach((text) => {
+    const el = document.getElementById(text.id);
+    const lineHeight = 17;
+
+    const splitMessage = el.innerHTML.split("\n").map((line, i) => {
+      return $(`<tspan x=0 dy="${lineHeight * i}">${line}</tspan>`)[0].outerHTML;
+    })
+    .reduce((acc, current) => { return acc + current });
+
+    el.innerHTML = splitMessage
+  });
 }
 
 const sizeInput = document.getElementById("size");
