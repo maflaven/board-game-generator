@@ -16,7 +16,7 @@ const generateBoard = (options) => {
 
   const boardSideLength = options.boardSideLength || 3000;
   const sections = options.sections || 20;
-  const sideLength = boardSideLength / sections;
+  const sideLength = boardSideLength / ((sections) / 4 + 1);
   const quadrantSize = sections / 4;
   const sectionLineWidth = 4;
 
