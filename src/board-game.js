@@ -1,7 +1,8 @@
 let two;
 let squares = [];
 let texts = [];
-let textsMap = {};
+let textsMap = localStorage["boardGameGenerator:textsMap"] ?
+  JSON.parse(localStorage["boardGameGenerator:textsMap"]) : {};
 
 let showSpaceOrd = true;
 
@@ -53,12 +54,14 @@ const generateBoard = (options) => {
     square.linewidth = sectionLineWidth;
     squares.push(square);
 
-    textsMap[i] = textsMap[i] || `Space\n#${i + 1}\nblarg`;
+    textsMap[i] = textsMap[i] || `Space Text`;
 
     const text = two.makeText(textsMap[i], x, y);
     text.rotation = rotation;
     texts.push(text);
   }
+
+  localStorage.setItem("boardGameGenerator:textsMap", JSON.stringify(textsMap));
 
   two.update();
 
