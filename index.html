@@ -8,17 +8,34 @@
     #controls { display: none; }
   </style>
   <style media="screen">
-    #controls {
-
+    #text-editor {
+      height: 4em;
     }
   </style>
   <body>
     <div id="controls">
+      <h2>Board Parameters</h2>
       <label>Board Size</label>
       <input type="number" value=1000 id="size">
       <label>Spaces (multiple of 4)</label>
       <input type="number" value=32 id="spaces">
       <button type="button" id="generate">Generate Board</button>
+      <br>
+      <br>
+      <br>
+      <h2>Change Space Text</h2>
+      <label>Select space's text to change</label>
+      <select id="space-selection"></select>
+      <textarea id="text-editor"></textarea>
+      <button type="button" id="save-text">Save space text</button>
+      <br>
+      <br>
+      <br>
+      <h2>Display Options</h2>
+      <button type="button" id="toggle-space-ord">Toggle showing space numbers</button>
+      <br>
+      <br>
+      <br>
     </div>
     <div id="board"></div>
     <script type="text/javascript" src="two.js"></script>

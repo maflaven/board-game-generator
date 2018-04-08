@@ -1,6 +1,9 @@
 let two;
 let squares = [];
 let texts = [];
+let textsMap = {};
+
+let showSpaceOrd = true;
 
 const generateBoard = (options) => {
 
@@ -14,12 +17,12 @@ const generateBoard = (options) => {
   }
 
   const boardSideLength = options.boardSideLength || 3000;
-  const sections = options.sections || 20;
-  const sideLength = boardSideLength / ((sections) / 4 + 1);
-  const quadrantSize = sections / 4;
+  const spaces = options.spaces || 20;
+  const sideLength = boardSideLength / ((spaces) / 4 + 1);
+  const quadrantSize = spaces / 4;
   const sectionLineWidth = 4;
 
-  for (let i = 0; i < sections; i++) {
+  for (let i = 0; i < spaces; i++) {
 
     const lineWidthPadding = sectionLineWidth / 2;
     const ord = i % quadrantSize;
@@ -50,14 +53,19 @@ const generateBoard = (options) => {
     square.linewidth = sectionLineWidth;
     squares.push(square);
 
-    const text = two.makeText(`Space\n#${i + 1}\nblarg`, x, y);
+    textsMap[i] = textsMap[i] || `Space\n#${i + 1}\nblarg`;
+
+    const text = two.makeText(textsMap[i], x, y);
     text.rotation = rotation;
     texts.push(text);
   }
 
   two.update();
 
-  texts.forEach((text) => {
+  const $selector = $('#space-selection');
+  $selector.html("");
+
+  texts.forEach((text, i) => {
     const el = document.getElementById(text.id);
     const splitMessage = el.innerHTML.split("\n");
     const lines = splitMessage.length;
@@ -72,24 +80,58 @@ const generateBoard = (options) => {
       initialDY = -((lines - 1) / 2 * lineHeight);
     }
 
-    el.innerHTML = el.innerHTML.split("\n").map((line, i) => {
+    let newText = el.innerHTML.split("\n").map((line, i) => {
       const dy = i === 0 ? initialDY : lineHeight;
 
       return $(`<tspan x=0 dy="${dy}">${line}</tspan>`)[0].outerHTML;
     })
     .reduce((acc, current) => { return acc + current });
+
+    const dy = lines === 0 ? 0 : lineHeight;
+
+    if (showSpaceOrd) {
+      newText += $(`<tspan x=0 dy="${dy}">(#${i + 1})</tspan>`)[0].outerHTML
+    }
+
+    el.innerHTML = newText;
+
+    $selector.append($(`<option value="${i}">${i + 1}</option>`));
   });
+
+  selector.onchange && selector.onchange();
 }
 
 const sizeInput = document.getElementById("size");
 const spacesInput = document.getElementById("spaces");
 const generateButton = document.getElementById("generate");
+const selector = document.getElementById("space-selection");
+const saveTextButton = document.getElementById("save-text");
+const toggleSpaceOrdButton = document.getElementById("toggle-space-ord");
 
 generateButton.onclick = () => {
   generateBoard({
     boardSideLength: sizeInput.value || 3000,
-    sections: spacesInput.value || 40,
+    spaces: spacesInput.value || 40,
   });
 };
 
 generateButton.onclick();
+
+selector.onchange = () => {
+  const i = $(selector).val();
+  $('#text-editor').val(textsMap[i]);
+};
+
+selector.onchange();
+
+saveTextButton.onclick = () => {
+  const text = $('#text-editor').val();
+  const i = $(selector).val();
+  textsMap[i] = text;
+  generateButton.onclick();
+}
+
+toggleSpaceOrdButton.onclick = () => {
+  showSpaceOrd = !showSpaceOrd;
+  generateButton.onclick();
+}
